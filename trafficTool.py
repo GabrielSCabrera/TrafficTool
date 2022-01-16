@@ -8,7 +8,7 @@ import requests
 import json
 
 
-class RoadTool:
+class TrafficTool:
     """
     For gathering traffic data using the Vegvesen API - API guide available at:
     https://www.vegvesen.no/trafikkdata/start/om-api
@@ -207,7 +207,7 @@ class RoadTool:
                     else:
                         trafficVolumeByHour[i] = temp_list
 
-        print(f"DOWNLOADING - 100%")
+        print(f"\rDOWNLOADING - 100.0%")
 
         return trafficVolumeByHour
 
@@ -254,7 +254,7 @@ class RoadTool:
         start = start.replace(microsecond=0, second=0, minute=0)
         stop = stop.replace(microsecond=0, second=0, minute=0)
 
-        trafficVolumeByHour = road_tool.query_traffic_volume_by_hour(
+        trafficVolumeByHour = self.query_traffic_volume_by_hour(
             [i["id"] for i in trafficRegistrationPoints], start, stop
         )
 
@@ -529,24 +529,24 @@ class RoadTool:
         Creates an animation of the traffic volume for the selected timeframe
         and given filters.
         """
-        trp = road_tool.get_traffic_registration_points(
+        trp = self.get_traffic_registration_points(
             roadCategoryIds,
             countyNumbers,
             isOperational,
             trafficType,
             registrationFrequency,
         )
-        tvbh, max_volume = road_tool.get_traffic_volume_by_hour(trp, start, stop)
-        road_tool.animate_traffic_volume(
+        tvbh, max_volume = self.get_traffic_volume_by_hour(trp, start, stop)
+        self.animate_traffic_volume(
             sortedTrafficVolumeByHour=tvbh, max_volume=max_volume, save_as=save_as
         )
 
 
 if __name__ == "__main__":
-    road_tool = RoadTool()
+    traffic_tool = TrafficTool()
     start = datetime(year=2019, month=10, day=24, hour=0)
-    stop = datetime(year=2019, month=10, day=31, hour=0)
+    stop = datetime(year=2019, month=10, day=28, hour=0)
     save_as = "animation"
-    road_tool.traffic_animation(
-        start, stop, trafficType="Vehicle", save_as=save_as
+    traffic_tool.traffic_animation(
+        start, stop, roadCategoryIds=["E"], trafficType="Bicycle", save_as=save_as
     )
