@@ -546,10 +546,10 @@ if __name__ == "__main__":
     traffic_tool = TrafficTool()
     start = datetime(year=2019, month=10, day=24, hour=0)
     stop = datetime(year=2019, month=10, day=31, hour=0)
-    save_as = "animation"
-    traffic_tool.traffic_animation(start, stop, trafficType="Vehicle", save_as=save_as)
+    # save_as = "animation_all_roads"
+    # traffic_tool.traffic_animation(start, stop, trafficType="Vehicle", save_as=save_as)
 
-    # save_as = "animation_bicycles"
-    # traffic_tool.traffic_animation(
-    #     start, stop, roadCategoryIds=["E"], trafficType="Bicycle", save_as=save_as
-    # )
+    save_as = "animation_bicycles"
+    traffic_tool.traffic_animation(
+        start, stop, roadCategoryIds=["E"], trafficType="Bicycle", save_as=save_as
+    )
