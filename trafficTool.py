@@ -45,7 +45,7 @@ class TrafficTool:
 
         while attempts > 0:
             try:
-                response = requests.post(url, headers=headers, data=data, timeout=5)
+                response = requests.post(url, headers=headers, data=data, timeout=2)
                 break
             except requests.exceptions.ReadTimeout:
                 attempts -= 1
@@ -185,7 +185,7 @@ class TrafficTool:
                 new_perc = round(100 * (n * m + n) / itermax, 1)
                 if new_perc > perc:
                     perc = new_perc
-                    print(f"\rDOWNLOADING - {perc}%", end = '')
+                    print(f"\rDOWNLOADING - {perc}%", end="")
                 temp_list = []
                 try:
                     for j in response.json()["data"]["trafficData"]["volume"]["byHour"][
@@ -287,7 +287,7 @@ class TrafficTool:
         plt.style.use("dark_background")
         fig, ax = plt.subplots()
 
-        fig.set_dpi(100)
+        fig.set_dpi(200)
         fig.set_size_inches(8, 11)
 
         m = Basemap(
@@ -300,8 +300,8 @@ class TrafficTool:
             lat_1=65.0,
             lon_0=5.0,
         )
-        m.drawmapboundary(fill_color=water_color)
-        m.drawcountries()
+        m.drawmapboundary(fill_color=water_color, linewidth=0.5)
+        m.drawcountries(linewidth=0.5)
         parallels = np.arange(0.0, 81, 2.0)
         m.drawparallels(parallels, labels=[False, True, True, False], textcolor="w")
         meridians = np.arange(-10, 351.0, 5.0)
@@ -415,7 +415,7 @@ class TrafficTool:
         colors = []
         sizes = []
         max_size = 40
-        min_size = 5
+        min_size = 3
         datetimes = sorted(sortedTrafficVolumeByHour.keys())
 
         for i in sortedTrafficVolumeByHour[datetimes[0]].values():
@@ -506,12 +506,12 @@ class TrafficTool:
         )
 
         if save_as is None:
-            print("Displaying Animation")
+            print("DISPLAYING ANIMATION")
             plt.show()
             plt.close()
         else:
-            print("Saving Animation")
-            anim.save(f"{save_as}.mp4", writer="ffmpeg", fps=16)
+            print("SAVING ANIMATION")
+            anim.save(f"{save_as}.mp4", writer="ffmpeg", fps=16, dpi=200)
             plt.close()
 
     def traffic_animation(
@@ -545,8 +545,11 @@ class TrafficTool:
 if __name__ == "__main__":
     traffic_tool = TrafficTool()
     start = datetime(year=2019, month=10, day=24, hour=0)
-    stop = datetime(year=2019, month=10, day=28, hour=0)
+    stop = datetime(year=2019, month=10, day=31, hour=0)
     save_as = "animation"
-    traffic_tool.traffic_animation(
-        start, stop, roadCategoryIds=["E"], trafficType="Bicycle", save_as=save_as
-    )
+    traffic_tool.traffic_animation(start, stop, trafficType="Vehicle", save_as=save_as)
+
+    # save_as = "animation_bicycles"
+    # traffic_tool.traffic_animation(
+    #     start, stop, roadCategoryIds=["E"], trafficType="Bicycle", save_as=save_as
+    # )
